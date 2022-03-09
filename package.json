@@ -1,0 +1,38 @@
+{
+  "name": "flappy-bird-course-starter",
+  "version": "1.0.0",
+  "repository": "git@github.com:sidequestdev/flappy-bird-course-starter.git",
+  "contributors": [
+    {
+      "name": "Jake Klassen",
+      "email": "jklassendev@gmail.com"
+    },
+    {
+      "name": "Jason Groulx",
+      "email": "groulx.jason@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.cjs,.ts"
+  },
+  "devDependencies": {
+    "@types/jest": "27.4.1",
+    "@types/node": "16.11.25",
+    "@typescript-eslint/eslint-plugin": "5.14.0",
+    "@typescript-eslint/parser": "5.14.0",
+    "comment-json": "4.2.2",
+    "eslint": "8.10.0",
+    "eslint-config-prettier": "8.5.0",
+    "esno": "0.14.1",
+    "jest": "27.5.1",
+    "prettier": "2.5.1",
+    "ts-jest": "27.1.3",
+    "typescript": "4.6.2",
+    "vite": "2.8.6"
+  }
+}
