@@ -110,13 +110,16 @@ export const spriteMap = {
       width: 32,
       height: 32,
     },
-    flap: {
-      sourceX: 0,
-      sourceY: 864,
-      width: 128,
-      height: 32,
-      frameWidth: 32,
-      frameHeight: 32,
+
+    animations: {
+      flap: {
+        sourceX: 0,
+        sourceY: 864,
+        width: 128,
+        height: 32,
+        frameWidth: 32,
+        frameHeight: 32,
+      },
     },
   },
 

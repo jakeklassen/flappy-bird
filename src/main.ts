@@ -1,4 +1,6 @@
 import { Frame } from "#/components/frame";
+import { SpriteAnimation } from "#/components/sprite-animation";
+import { SpriteAnimationDetails } from "#/components/sprite-animation-details";
 import { Vector2d } from "#/components/vector2d";
 import { config } from "#/config";
 import { Bird } from "#/entities/bird";
@@ -54,6 +56,17 @@ const bird = new Bird({
     spriteMap.bird.idle.width,
     spriteMap.bird.idle.height,
   ),
+  flapAnimation: new SpriteAnimation(
+    new SpriteAnimationDetails(
+      spriteMap.bird.animations.flap.sourceX,
+      spriteMap.bird.animations.flap.sourceY,
+      spriteMap.bird.animations.flap.width,
+      spriteMap.bird.animations.flap.height,
+      spriteMap.bird.animations.flap.frameWidth,
+      spriteMap.bird.animations.flap.frameHeight,
+    ),
+    0.3,
+  ),
 });
 
 let last = performance.now();
@@ -67,6 +80,7 @@ const frame = (hrt: DOMHighResTimeStamp) => {
   context.clearRect(0, 0, canvas.width, canvas.height);
 
   ground.update(dt);
+  bird.update(dt);
 
   // Draw the background
   context.drawImage(
