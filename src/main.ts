@@ -1,3 +1,4 @@
+import spritesheetUrl from "#/assets/image/spritesheet2x.png";
 import { Frame } from "#/components/frame";
 import { SpriteAnimation } from "#/components/sprite-animation";
 import { SpriteAnimationDetails } from "#/components/sprite-animation-details";
@@ -7,7 +8,6 @@ import { Bird } from "#/entities/bird";
 import { Ground } from "#/entities/ground";
 import { loadImage } from "#/lib/asset-loader";
 import { spriteMap } from "#/sprite-map";
-import spritesheetUrl from "../assets/image/spritesheet2x.png";
 
 const spritesheet = await loadImage(spritesheetUrl);
 
@@ -26,6 +26,11 @@ if (context === null) {
 }
 
 context.imageSmoothingEnabled = false;
+
+// Add event listener to trigger bird flap
+canvas.addEventListener("click", () => {
+  bird.flap();
+});
 
 // Draw the background
 context.drawImage(

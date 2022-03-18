@@ -15,6 +15,7 @@
     "noImplicitReturns": true,
     "baseUrl": ".",
     "paths": {
+      "#/assets/*": ["assets/*"],
       "#/*": ["src/*"]
     }
   },
