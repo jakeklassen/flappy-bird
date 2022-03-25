@@ -1,7 +1,8 @@
-import spritesheetUrl from "#/assets/image/spritesheet2x.png";
-import { Frame } from "#/components/frame";
+import spriteSheetUrl from "#/assets/image/spritesheet.png";
+import { CircleCollider } from "#/components/circle-collider";
 import { SpriteAnimation } from "#/components/sprite-animation";
 import { SpriteAnimationDetails } from "#/components/sprite-animation-details";
+import { SpriteData } from "#/components/sprite-data";
 import { Vector2d } from "#/components/vector2d";
 import { config } from "#/config";
 import { Bird } from "#/entities/bird";
@@ -9,10 +10,10 @@ import { Ground } from "#/entities/ground";
 import { loadImage } from "#/lib/asset-loader";
 import { spriteMap } from "#/sprite-map";
 
-const spritesheet = await loadImage(spritesheetUrl);
+const spriteSheet = await loadImage(spriteSheetUrl);
 
 const canvas = document.querySelector("canvas");
-if (canvas === null) {
+if (canvas == null) {
   throw new Error("Could not find canvas element");
 }
 
@@ -21,7 +22,7 @@ canvas.height = config.gameHeight;
 
 const context = canvas.getContext("2d");
 
-if (context === null) {
+if (context == null) {
   throw new Error("Could not obtain 2d context");
 }
 
@@ -32,9 +33,15 @@ canvas.addEventListener("click", () => {
   bird.flap();
 });
 
+window.addEventListener("keypress", (event) => {
+  if (event.code === "KeyD") {
+    config.debug = !config.debug;
+  }
+});
+
 // Draw the background
 context.drawImage(
-  spritesheet,
+  spriteSheet,
   spriteMap.background.sourceX,
   spriteMap.background.sourceY,
   spriteMap.background.width,
@@ -47,15 +54,15 @@ context.drawImage(
 
 const ground = new Ground({
   position: new Vector2d(0, config.gameHeight - spriteMap.ground.height),
-  frame: spriteMap.ground,
-  spritesheet,
+  spriteData: spriteMap.ground,
+  spriteSheet: spriteSheet,
   scrollSpeed: 120,
 });
 
 const bird = new Bird({
-  spritesheet,
+  spriteSheet: spriteSheet,
   position: new Vector2d(config.gameWidth / 4, config.gameHeight / 2),
-  frame: new Frame(
+  spriteData: new SpriteData(
     spriteMap.bird.idle.sourceX,
     spriteMap.bird.idle.sourceY,
     spriteMap.bird.idle.width,
@@ -72,6 +79,8 @@ const bird = new Bird({
     ),
     0.3,
   ),
+  collider: new CircleCollider(0, 0, 12),
+  config,
 });
 
 let last = performance.now();
@@ -89,7 +98,7 @@ const frame = (hrt: DOMHighResTimeStamp) => {
 
   // Draw the background
   context.drawImage(
-    spritesheet,
+    spriteSheet,
     spriteMap.background.sourceX,
     spriteMap.background.sourceY,
     spriteMap.background.width,

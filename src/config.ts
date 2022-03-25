@@ -8,6 +8,8 @@ export const config = {
    * In pixels
    */
   gameHeight: 576,
+
+  debug: false,
 };
 
 export type Config = typeof config;

@@ -1,6 +1,8 @@
-import { Frame } from "#/components/frame";
+import { CircleCollider } from "#/components/circle-collider";
 import { SpriteAnimation } from "#/components/sprite-animation";
+import { SpriteData } from "#/components/sprite-data";
 import { Vector2d } from "#/components/vector2d";
+import { Config } from "#/config";
 
 export enum BirdState {
   Idle,
@@ -9,18 +11,22 @@ export enum BirdState {
 }
 
 type BirdOptions = {
-  spritesheet: HTMLImageElement;
-  frame: Frame;
+  spriteSheet: HTMLImageElement;
+  spriteData: SpriteData;
   position: Vector2d;
   flapAnimation: SpriteAnimation;
+  collider: CircleCollider;
+  config: Config;
 };
 
 export class Bird {
   state = BirdState.Idle;
-  spritesheet: HTMLImageElement;
-  frame: Frame;
+  spriteSheet: HTMLImageElement;
+  spriteData: SpriteData;
   position: Vector2d;
   flapAnimation: SpriteAnimation;
+  collider: CircleCollider;
+  config: Config;
   velocity = new Vector2d();
   rotation = 0;
 
@@ -45,10 +51,12 @@ export class Bird {
   thrust = this.gravity * this.timeToJumpApex;
 
   constructor(options: BirdOptions) {
-    this.spritesheet = options.spritesheet;
-    this.frame = options.frame;
+    this.spriteSheet = options.spriteSheet;
+    this.spriteData = options.spriteData;
     this.position = options.position;
     this.flapAnimation = options.flapAnimation;
+    this.collider = options.collider;
+    this.config = options.config;
   }
 
   public flap() {
@@ -107,7 +115,7 @@ export class Bird {
     const currentFrame = this.flapAnimation.getCurrentFrame();
 
     context.drawImage(
-      this.spritesheet,
+      this.spriteSheet,
       currentFrame.sourceX,
       currentFrame.sourceY,
       currentFrame.width,
@@ -117,6 +125,15 @@ export class Bird {
       currentFrame.width,
       currentFrame.height,
     );
+
+    // if (this.config.debug) {
+    //   context.fillStyle = "red";
+    //   context.globalAlpha = 0.5;
+    //   context.beginPath();
+    //   context.arc(0, 0, this.collider.radius, 0, 2 * Math.PI);
+    //   context.fill();
+    //   context.globalAlpha = 1;
+    // }
 
     context.resetTransform();
   }

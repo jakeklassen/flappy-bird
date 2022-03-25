@@ -1,10 +1,10 @@
-import { Frame } from "#/components/frame";
 import { SpriteAnimationDetails } from "#/components/sprite-animation-details";
+import { SpriteData } from "#/components/sprite-data";
 
 export class SpriteAnimation {
   public elapsedFrameTime = 0;
   public currentFrameIndex = 0;
-  public frames: Frame[] = [];
+  public frames: SpriteData[] = [];
 
   /**
    * The frame rate of the animation in seconds.
@@ -23,7 +23,7 @@ export class SpriteAnimation {
         animationDetails.sourceX + i * animationDetails.frameWidth;
 
       this.frames.push(
-        new Frame(
+        new SpriteData(
           sourceX,
           animationDetails.sourceY,
           animationDetails.frameWidth,

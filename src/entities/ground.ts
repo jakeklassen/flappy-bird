@@ -1,10 +1,10 @@
-import { Frame } from "#/components/frame";
+import { SpriteData } from "#/components/sprite-data";
 import { Vector2d } from "#/components/vector2d";
 
 type GroundOptions = {
   position: Vector2d;
-  frame: Frame;
-  spritesheet: HTMLImageElement;
+  spriteData: SpriteData;
+  spriteSheet: HTMLImageElement;
 
   /**
    * This is in pixels **per frame**.
@@ -14,8 +14,8 @@ type GroundOptions = {
 
 export class Ground {
   position: Vector2d;
-  frame: Frame;
-  spritesheet: HTMLImageElement;
+  spriteData: SpriteData;
+  spriteSheet: HTMLImageElement;
   scrollSpeed: number;
 
   // Track the current scroll position separately from the position.
@@ -23,8 +23,8 @@ export class Ground {
 
   constructor(options: GroundOptions) {
     this.position = options.position;
-    this.frame = options.frame;
-    this.spritesheet = options.spritesheet;
+    this.spriteData = options.spriteData;
+    this.spriteSheet = options.spriteSheet;
     this.scrollSpeed = options.scrollSpeed;
   }
 
@@ -33,7 +33,7 @@ export class Ground {
 
     // Once the whole image is offscreen, reset the x position to 0 to
     // create the loop effect.
-    if (this.scrollPositionX <= -this.frame.width) {
+    if (this.scrollPositionX <= -this.spriteData.width) {
       this.scrollPositionX = 0;
     }
   }
@@ -44,28 +44,28 @@ export class Ground {
 
     // Draw the visible portion of the image.
     context.drawImage(
-      this.spritesheet,
-      this.frame.sourceX + diff,
-      this.frame.sourceY,
-      this.frame.width - diff,
-      this.frame.height,
+      this.spriteSheet,
+      this.spriteData.sourceX + diff,
+      this.spriteData.sourceY,
+      this.spriteData.width - diff,
+      this.spriteData.height,
       this.position.x,
       this.position.y,
-      this.frame.width - diff,
-      this.frame.height,
+      this.spriteData.width - diff,
+      this.spriteData.height,
     );
 
     // Draw the remaining portion of the image (what is currently offscreen).
     context.drawImage(
-      this.spritesheet,
-      this.frame.sourceX,
-      this.frame.sourceY,
+      this.spriteSheet,
+      this.spriteData.sourceX,
+      this.spriteData.sourceY,
       diff,
-      this.frame.height,
+      this.spriteData.height,
       context.canvas.width - diff,
       this.position.y,
       diff,
-      this.frame.height,
+      this.spriteData.height,
     );
   }
 }
