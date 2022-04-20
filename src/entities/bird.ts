@@ -1,8 +1,13 @@
-import { CircleCollider } from "#/components/circle-collider";
 import { SpriteAnimation } from "#/components/sprite-animation";
 import { SpriteData } from "#/components/sprite-data";
 import { Vector2d } from "#/components/vector2d";
-import { Config } from "#/config";
+
+type BirdOptions = {
+  spriteSheet: HTMLImageElement;
+  spriteData: SpriteData;
+  position: Vector2d;
+  flapAnimation: SpriteAnimation;
+};
 
 export enum BirdState {
   Idle,
@@ -10,24 +15,17 @@ export enum BirdState {
   Dead,
 }
 
-type BirdOptions = {
-  spriteSheet: HTMLImageElement;
-  spriteData: SpriteData;
-  position: Vector2d;
-  flapAnimation: SpriteAnimation;
-  collider: CircleCollider;
-  config: Config;
-};
-
 export class Bird {
   state = BirdState.Idle;
   spriteSheet: HTMLImageElement;
   spriteData: SpriteData;
   position: Vector2d;
   flapAnimation: SpriteAnimation;
-  collider: CircleCollider;
-  config: Config;
   velocity = new Vector2d();
+
+  /**
+   * Rotation in degrees
+   */
   rotation = 0;
 
   /**
@@ -41,7 +39,7 @@ export class Bird {
   timeToJumpApex = 0.35;
 
   /**
-   * Calculated using the formula: `gravity = 2 * jumpHeight / timeToJumpApex ** 2`
+   * Calculated using the formula: `gravity = (2 * jumpHeight) / timeToJumpApex ** 2`
    */
   gravity = (2 * this.jumpHeight) / this.timeToJumpApex ** 2;
 
@@ -55,15 +53,12 @@ export class Bird {
     this.spriteData = options.spriteData;
     this.position = options.position;
     this.flapAnimation = options.flapAnimation;
-    this.collider = options.collider;
-    this.config = options.config;
   }
 
   public flap() {
     switch (this.state) {
       case BirdState.Idle: {
         this.state = BirdState.Flying;
-        // Apply thrust on the transition as well, it felt good
         this.velocity.y = -this.thrust;
 
         break;
@@ -79,12 +74,9 @@ export class Bird {
 
   public setRotation() {
     if (this.velocity.y < 0) {
-      this.rotation = Math.max(
-        -25,
-        (-25 * this.velocity.y) / (-1 * this.thrust),
-      );
+      this.rotation = Math.max(-25, -25 * (this.velocity.y / -this.thrust));
     } else if (this.velocity.y > 0) {
-      this.rotation = Math.min(50, (50 * this.velocity.y) / this.thrust);
+      this.rotation = Math.min(50, 50 * (this.velocity.y / this.thrust));
     }
   }
 
@@ -125,15 +117,6 @@ export class Bird {
       currentFrame.width,
       currentFrame.height,
     );
-
-    // if (this.config.debug) {
-    //   context.fillStyle = "red";
-    //   context.globalAlpha = 0.5;
-    //   context.beginPath();
-    //   context.arc(0, 0, this.collider.radius, 0, 2 * Math.PI);
-    //   context.fill();
-    //   context.globalAlpha = 1;
-    // }
 
     context.resetTransform();
   }

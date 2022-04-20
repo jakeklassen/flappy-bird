@@ -2,14 +2,22 @@ import { SpriteAnimationDetails } from "#/components/sprite-animation-details";
 import { SpriteData } from "#/components/sprite-data";
 
 export class SpriteAnimation {
+  /**
+   * The elapsed time of the current frame
+   */
   public elapsedFrameTime = 0;
-  public currentFrameIndex = 0;
-  public frames: SpriteData[] = [];
 
   /**
    * The frame rate of the animation in seconds.
    */
   public frameRate = 0;
+
+  /**
+   * Sprite data for each frame of the animation
+   */
+  public frames: SpriteData[] = [];
+
+  public currentFrameIndex = 0;
 
   constructor(
     public animationDetails: SpriteAnimationDetails,

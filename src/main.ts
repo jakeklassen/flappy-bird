@@ -1,5 +1,4 @@
 import spriteSheetUrl from "#/assets/image/spritesheet.png";
-import { CircleCollider } from "#/components/circle-collider";
 import { SpriteAnimation } from "#/components/sprite-animation";
 import { SpriteAnimationDetails } from "#/components/sprite-animation-details";
 import { SpriteData } from "#/components/sprite-data";
@@ -79,8 +78,6 @@ const bird = new Bird({
     ),
     0.3,
   ),
-  collider: new CircleCollider(0, 0, 12),
-  config,
 });
 
 let last = performance.now();

@@ -34,7 +34,9 @@ export class Ground {
     // Once the whole image is offscreen, reset the x position to 0 to
     // create the loop effect.
     if (this.scrollPositionX <= -this.spriteData.width) {
-      this.scrollPositionX = 0;
+      this.scrollPositionX = -(
+        Math.abs(this.spriteData.width) - Math.abs(this.scrollPositionX)
+      );
     }
   }
 

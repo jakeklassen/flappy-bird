@@ -107,7 +107,7 @@ export const spriteMap = {
     idle: {
       sourceX: 0,
       sourceY: 864,
-      width: 32,
+      width: 36,
       height: 32,
     },
 
