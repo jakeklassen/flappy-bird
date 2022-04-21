@@ -1,4 +1,6 @@
 import spriteSheetUrl from "#/assets/image/spritesheet.png";
+import { BoxCollider } from "#/components/box-collider";
+import { CircleCollider } from "#/components/circle-collider";
 import { SpriteAnimation } from "#/components/sprite-animation";
 import { SpriteAnimationDetails } from "#/components/sprite-animation-details";
 import { SpriteData } from "#/components/sprite-data";
@@ -52,6 +54,13 @@ context.drawImage(
 );
 
 const ground = new Ground({
+  boxCollider: new BoxCollider(
+    0,
+    0,
+    spriteMap.ground.width,
+    spriteMap.ground.height,
+  ),
+  config,
   position: new Vector2d(0, config.gameHeight - spriteMap.ground.height),
   spriteData: spriteMap.ground,
   spriteSheet: spriteSheet,
@@ -59,6 +68,7 @@ const ground = new Ground({
 });
 
 const bird = new Bird({
+  config,
   spriteSheet: spriteSheet,
   position: new Vector2d(config.gameWidth / 4, config.gameHeight / 2),
   spriteData: new SpriteData(
@@ -78,6 +88,7 @@ const bird = new Bird({
     ),
     0.3,
   ),
+  circlCollider: new CircleCollider(0, 0, 12),
 });
 
 let last = performance.now();

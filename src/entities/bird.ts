@@ -1,12 +1,16 @@
+import { CircleCollider } from "#/components/circle-collider";
 import { SpriteAnimation } from "#/components/sprite-animation";
 import { SpriteData } from "#/components/sprite-data";
 import { Vector2d } from "#/components/vector2d";
+import { Config } from "#/config";
 
 type BirdOptions = {
+  config: Config;
   spriteSheet: HTMLImageElement;
   spriteData: SpriteData;
   position: Vector2d;
   flapAnimation: SpriteAnimation;
+  circlCollider: CircleCollider;
 };
 
 export enum BirdState {
@@ -22,6 +26,8 @@ export class Bird {
   position: Vector2d;
   flapAnimation: SpriteAnimation;
   velocity = new Vector2d();
+  circleCollider: CircleCollider;
+  config: Config;
 
   /**
    * Rotation in degrees
@@ -53,6 +59,8 @@ export class Bird {
     this.spriteData = options.spriteData;
     this.position = options.position;
     this.flapAnimation = options.flapAnimation;
+    this.circleCollider = options.circlCollider;
+    this.config = options.config;
   }
 
   public flap() {
@@ -117,6 +125,15 @@ export class Bird {
       currentFrame.width,
       currentFrame.height,
     );
+
+    if (this.config.debug) {
+      context.fillStyle = "red";
+      context.globalAlpha = 0.5;
+      context.beginPath();
+      context.arc(0, 0, this.circleCollider.radius, 0, 2 * Math.PI);
+      context.fill();
+      context.globalAlpha = 1;
+    }
 
     context.resetTransform();
   }

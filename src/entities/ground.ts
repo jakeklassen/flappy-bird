@@ -1,7 +1,11 @@
+import { BoxCollider } from "#/components/box-collider";
 import { SpriteData } from "#/components/sprite-data";
 import { Vector2d } from "#/components/vector2d";
+import { Config } from "#/config";
 
 type GroundOptions = {
+  boxCollider: BoxCollider;
+  config: Config;
   position: Vector2d;
   spriteData: SpriteData;
   spriteSheet: HTMLImageElement;
@@ -13,6 +17,8 @@ type GroundOptions = {
 };
 
 export class Ground {
+  boxCollider: BoxCollider;
+  config: Config;
   position: Vector2d;
   spriteData: SpriteData;
   spriteSheet: HTMLImageElement;
@@ -22,6 +28,8 @@ export class Ground {
   public scrollPositionX = 0;
 
   constructor(options: GroundOptions) {
+    this.boxCollider = options.boxCollider;
+    this.config = options.config;
     this.position = options.position;
     this.spriteData = options.spriteData;
     this.spriteSheet = options.spriteSheet;
@@ -69,5 +77,18 @@ export class Ground {
       diff,
       this.spriteData.height,
     );
+
+    if (this.config.debug) {
+      context.fillStyle = "red";
+      context.globalAlpha = 0.5;
+      context.fillRect(
+        this.position.x,
+        this.position.y,
+        this.boxCollider.width,
+        this.boxCollider.height,
+      );
+
+      context.globalAlpha = 1;
+    }
   }
 }
