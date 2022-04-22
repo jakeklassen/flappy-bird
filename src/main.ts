@@ -8,10 +8,13 @@ import { Vector2d } from "#/components/vector2d";
 import { config } from "#/config";
 import { Bird } from "#/entities/bird";
 import { Ground } from "#/entities/ground";
+import { Game, GameState } from "#/game";
 import { loadImage } from "#/lib/asset-loader";
+import { circleRectangleIntersects } from "#/lib/collision";
 import { spriteMap } from "#/sprite-map";
 
 const spriteSheet = await loadImage(spriteSheetUrl);
+const game = new Game();
 
 const canvas = document.querySelector("canvas");
 if (canvas == null) {
@@ -31,12 +34,33 @@ context.imageSmoothingEnabled = false;
 
 // Add event listener to trigger bird flap
 canvas.addEventListener("click", () => {
-  bird.flap();
+  switch (game.state) {
+    case GameState.Title: {
+      game.state = GameState.Playing;
+      bird.flap();
+
+      break;
+    }
+
+    case GameState.Playing: {
+      bird.flap();
+
+      break;
+    }
+
+    case GameState.GameOver: {
+      game.reset();
+      bird.reset();
+      ground.start();
+
+      break;
+    }
+  }
 });
 
 window.addEventListener("keypress", (event) => {
   if (event.code === "KeyD") {
-    config.debug = !config.debug;
+    game.debug = !game.debug;
   }
 });
 
@@ -60,7 +84,7 @@ const ground = new Ground({
     spriteMap.ground.width,
     spriteMap.ground.height,
   ),
-  config,
+  game,
   position: new Vector2d(0, config.gameHeight - spriteMap.ground.height),
   spriteData: spriteMap.ground,
   spriteSheet: spriteSheet,
@@ -68,7 +92,7 @@ const ground = new Ground({
 });
 
 const bird = new Bird({
-  config,
+  game,
   spriteSheet: spriteSheet,
   position: new Vector2d(config.gameWidth / 4, config.gameHeight / 2),
   spriteData: new SpriteData(
@@ -104,6 +128,22 @@ const frame = (hrt: DOMHighResTimeStamp) => {
   ground.update(dt);
   bird.update(dt);
 
+  const didBirdHitGround = circleRectangleIntersects(
+    bird.position.x + bird.circleCollider.offsetX,
+    bird.position.y + bird.circleCollider.offsetY,
+    bird.circleCollider.radius,
+    ground.position.x + ground.boxCollider.offsetX,
+    ground.position.y + ground.boxCollider.offsetY,
+    ground.boxCollider.width,
+    ground.boxCollider.height,
+  );
+
+  if (didBirdHitGround) {
+    bird.die();
+    ground.stop();
+    game.state = GameState.GameOver;
+  }
+
   // Draw the background
   context.drawImage(
     spriteSheet,
@@ -117,8 +157,8 @@ const frame = (hrt: DOMHighResTimeStamp) => {
     spriteMap.background.height,
   );
 
-  ground.draw(context);
   bird.draw(context);
+  ground.draw(context);
 
   last = hrt;
 

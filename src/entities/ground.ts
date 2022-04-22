@@ -1,11 +1,11 @@
 import { BoxCollider } from "#/components/box-collider";
 import { SpriteData } from "#/components/sprite-data";
 import { Vector2d } from "#/components/vector2d";
-import { Config } from "#/config";
+import { Game } from "#/game";
 
 type GroundOptions = {
   boxCollider: BoxCollider;
-  config: Config;
+  game: Game;
   position: Vector2d;
   spriteData: SpriteData;
   spriteSheet: HTMLImageElement;
@@ -18,10 +18,11 @@ type GroundOptions = {
 
 export class Ground {
   boxCollider: BoxCollider;
-  config: Config;
+  game: Game;
   position: Vector2d;
   spriteData: SpriteData;
   spriteSheet: HTMLImageElement;
+  scrolling = true;
   scrollSpeed: number;
 
   // Track the current scroll position separately from the position.
@@ -29,14 +30,26 @@ export class Ground {
 
   constructor(options: GroundOptions) {
     this.boxCollider = options.boxCollider;
-    this.config = options.config;
+    this.game = options.game;
     this.position = options.position;
     this.spriteData = options.spriteData;
     this.spriteSheet = options.spriteSheet;
     this.scrollSpeed = options.scrollSpeed;
   }
 
+  public stop() {
+    this.scrolling = false;
+  }
+
+  public start() {
+    this.scrolling = true;
+  }
+
   public update(delta: number) {
+    if (this.scrolling === false) {
+      return;
+    }
+
     this.scrollPositionX -= this.scrollSpeed * delta;
 
     // Once the whole image is offscreen, reset the x position to 0 to
@@ -78,7 +91,7 @@ export class Ground {
       this.spriteData.height,
     );
 
-    if (this.config.debug) {
+    if (this.game.debug) {
       context.fillStyle = "red";
       context.globalAlpha = 0.5;
       context.fillRect(

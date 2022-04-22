@@ -2,10 +2,10 @@ import { CircleCollider } from "#/components/circle-collider";
 import { SpriteAnimation } from "#/components/sprite-animation";
 import { SpriteData } from "#/components/sprite-data";
 import { Vector2d } from "#/components/vector2d";
-import { Config } from "#/config";
+import { Game } from "#/game";
 
 type BirdOptions = {
-  config: Config;
+  game: Game;
   spriteSheet: HTMLImageElement;
   spriteData: SpriteData;
   position: Vector2d;
@@ -27,7 +27,7 @@ export class Bird {
   flapAnimation: SpriteAnimation;
   velocity = new Vector2d();
   circleCollider: CircleCollider;
-  config: Config;
+  game: Game;
 
   /**
    * Rotation in degrees
@@ -60,7 +60,20 @@ export class Bird {
     this.position = options.position;
     this.flapAnimation = options.flapAnimation;
     this.circleCollider = options.circlCollider;
-    this.config = options.config;
+    this.game = options.game;
+  }
+
+  public die() {
+    this.state = BirdState.Dead;
+  }
+
+  public reset() {
+    this.position.x = this.game.config.gameWidth / 4;
+    this.position.y = this.game.config.gameHeight / 2;
+    this.rotation = 0;
+    this.velocity.x = 0;
+    this.velocity.y = 0;
+    this.state = BirdState.Idle;
   }
 
   public flap() {
@@ -126,7 +139,7 @@ export class Bird {
       currentFrame.height,
     );
 
-    if (this.config.debug) {
+    if (this.game.debug) {
       context.fillStyle = "red";
       context.globalAlpha = 0.5;
       context.beginPath();
