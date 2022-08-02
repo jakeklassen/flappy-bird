@@ -64,19 +64,6 @@ window.addEventListener("keypress", (event) => {
   }
 });
 
-// Draw the background
-context.drawImage(
-  spriteSheet,
-  spriteMap.background.sourceX,
-  spriteMap.background.sourceY,
-  spriteMap.background.width,
-  spriteMap.background.height,
-  0,
-  0,
-  spriteMap.background.width,
-  spriteMap.background.height,
-);
-
 const ground = new Ground({
   boxCollider: new BoxCollider(
     0,
