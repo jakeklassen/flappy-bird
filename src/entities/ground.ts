@@ -62,8 +62,10 @@ export class Ground {
   }
 
   public draw(context: CanvasRenderingContext2D) {
-    // First track how far the image is offscreen.
-    const diff = Math.abs(this.scrollPositionX);
+    // scrollPositionX is constantly in the negative direction, so we need to
+    // get the absolute value for the sampling below.
+    // We also need to floor the value to avoid sampling a partial sprite.
+    const diff = Math.floor(Math.abs(this.scrollPositionX));
 
     // Draw the visible portion of the image.
     context.drawImage(
