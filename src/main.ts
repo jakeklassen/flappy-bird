@@ -8,6 +8,7 @@ import { Vector2d } from "#/components/vector2d";
 import { config } from "#/config";
 import { Bird } from "#/entities/bird";
 import { Ground } from "#/entities/ground";
+import { PipeManager } from "#/entities/pipe-manager";
 import { Game, GameState } from "#/game";
 import { loadImage } from "#/lib/asset-loader";
 import { circleRectangleIntersects } from "#/lib/collision";
@@ -52,6 +53,7 @@ canvas.addEventListener("click", () => {
       game.reset();
       bird.reset();
       ground.start();
+      pipeManager.reset();
 
       break;
     }
@@ -102,6 +104,12 @@ const bird = new Bird({
   circlCollider: new CircleCollider(0, 0, 12),
 });
 
+const pipeManager = new PipeManager({
+  game,
+  spriteMap,
+  spriteSheet,
+});
+
 let last = performance.now();
 
 /**
@@ -112,6 +120,7 @@ const frame = (hrt: DOMHighResTimeStamp) => {
 
   context.clearRect(0, 0, canvas.width, canvas.height);
 
+  pipeManager.update(dt);
   ground.update(dt);
   bird.update(dt);
 
@@ -125,9 +134,32 @@ const frame = (hrt: DOMHighResTimeStamp) => {
     ground.boxCollider.height,
   );
 
-  if (didBirdHitGround) {
+  let didBirdHitPipe = false;
+  for (const pipe of pipeManager.pipes) {
+    didBirdHitPipe = false;
+
+    const pipeRectangleColliderY =
+      pipe.type === "top" ? 0 : pipe.position.y + pipe.boxCollider.offsetY;
+
+    didBirdHitPipe = circleRectangleIntersects(
+      bird.position.x + bird.circleCollider.offsetX,
+      bird.position.y + bird.circleCollider.offsetY,
+      bird.circleCollider.radius,
+      pipe.position.x + pipe.boxCollider.offsetX,
+      pipeRectangleColliderY,
+      pipe.boxCollider.width,
+      pipe.boxCollider.height,
+    );
+
+    if (didBirdHitPipe) {
+      break;
+    }
+  }
+
+  if (didBirdHitGround || didBirdHitPipe) {
     bird.die();
     ground.stop();
+    pipeManager.stop();
     game.state = GameState.GameOver;
   }
 
@@ -145,6 +177,7 @@ const frame = (hrt: DOMHighResTimeStamp) => {
   );
 
   bird.draw(context);
+  pipeManager.draw(context);
   ground.draw(context);
 
   last = hrt;

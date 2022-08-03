@@ -9,13 +9,17 @@ export const config = {
    */
   gameHeight: 576,
 
-  debug: false,
-
   pipe: {
     collider: {
       offsetX: 4,
       width: 56,
     },
+  },
+
+  pipeManager: {
+    pipeSpawnBuffer: 50,
+    pipeScrollSpeed: 240,
+    spawnIntervalInSeconds: 1.5,
   },
 };
 
