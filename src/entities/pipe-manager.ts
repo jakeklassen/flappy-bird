@@ -22,7 +22,7 @@ export class PipeManager {
   spawnPositionYMaximum: number;
   spriteMap: SpriteMap;
   spriteSheet: HTMLImageElement;
-  stopped = false;
+  stopped = true;
 
   constructor(options: PipeManagerOptions) {
     this.game = options.game;
@@ -51,11 +51,15 @@ export class PipeManager {
   public reset() {
     this.pipes = [];
     this.spawnTimerAccumulator = 0;
-    this.stopped = false;
+    this.stopped = true;
   }
 
   public stop() {
     this.stopped = true;
+  }
+
+  public start() {
+    this.stopped = false;
   }
 
   public update(delta: number) {
