@@ -15,6 +15,7 @@ type PipeOptions = {
 export class Pipe {
   height: number;
   boxCollider: BoxCollider;
+  cleared = false;
   game: Game;
   position: Vector2d;
   rimSpriteData: SpriteData;
@@ -42,6 +43,10 @@ export class Pipe {
       this.game.config.pipe.collider.width,
       this.height,
     );
+  }
+
+  get centerX() {
+    return this.position.x + this.rimSpriteData.width / 2;
   }
 
   public draw(context: CanvasRenderingContext2D) {

@@ -1,19 +1,5 @@
 # Flappy Bird Course Starter Repo
 
-Base repo for the Flappy Bird Course.
+Implementation for my Flappy Bird [course](https://sidequestdev-staging.fly.dev/courses/flappy-bird/welcome).
 
 🐤
-
-## Getting Started
-
-> We are using node 16
-
-After you clone this repo, you can start by running the following commands:
-
-- `nvm use # or fnm, whatever you use to manage node versions`
-- `npm install`
-- `npm run dev`
-
-## Sources
-
-https://github.com/aaarafat/JS-Flappy-Bird - Best rotation feeling I saw

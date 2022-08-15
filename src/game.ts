@@ -8,7 +8,7 @@ export enum GameState {
 
 export class Game {
   config = config;
-  debug = true;
+  debug = false;
   state = GameState.Title;
 
   reset() {

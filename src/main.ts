@@ -9,6 +9,7 @@ import { config } from "#/config";
 import { Bird } from "#/entities/bird";
 import { Ground } from "#/entities/ground";
 import { PipeManager } from "#/entities/pipe-manager";
+import { ScoreManager } from "#/entities/score-manager";
 import { Game, GameState } from "#/game";
 import { loadImage } from "#/lib/asset-loader";
 import { circleRectangleIntersects } from "#/lib/collision";
@@ -39,6 +40,7 @@ canvas.addEventListener("click", () => {
     case GameState.Title: {
       game.state = GameState.Playing;
       bird.flap();
+      pipeManager.start();
 
       break;
     }
@@ -54,6 +56,7 @@ canvas.addEventListener("click", () => {
       bird.reset();
       ground.start();
       pipeManager.reset();
+      scoreManager.reset();
 
       break;
     }
@@ -110,6 +113,12 @@ const pipeManager = new PipeManager({
   spriteSheet,
 });
 
+const scoreManager = new ScoreManager({
+  config,
+  spriteMap,
+  spriteSheet,
+});
+
 let last = performance.now();
 
 /**
@@ -161,6 +170,20 @@ const frame = (hrt: DOMHighResTimeStamp) => {
     ground.stop();
     pipeManager.stop();
     game.state = GameState.GameOver;
+  } else {
+    for (const [pipeIndex, pipe] of pipeManager.pipes.entries()) {
+      if (pipe.cleared) {
+        continue;
+      }
+
+      const nextPipe = pipeManager.pipes[pipeIndex + 1];
+
+      if (pipe.centerX < bird.position.x) {
+        pipe.cleared = true;
+        nextPipe.cleared = true;
+        scoreManager.score++;
+      }
+    }
   }
 
   // Draw the background
@@ -179,6 +202,24 @@ const frame = (hrt: DOMHighResTimeStamp) => {
   bird.draw(context);
   pipeManager.draw(context);
   ground.draw(context);
+
+  if (game.state !== GameState.Title) {
+    scoreManager.draw(context);
+  }
+
+  if (game.state === GameState.Title) {
+    context.drawImage(
+      spriteSheet,
+      spriteMap.getReady.sourceX,
+      spriteMap.getReady.sourceY,
+      spriteMap.getReady.width,
+      spriteMap.getReady.height,
+      (config.gameWidth - spriteMap.getReady.width) / 2,
+      (config.gameHeight - spriteMap.getReady.height) / 2,
+      spriteMap.getReady.width,
+      spriteMap.getReady.height,
+    );
+  }
 
   last = hrt;
 
